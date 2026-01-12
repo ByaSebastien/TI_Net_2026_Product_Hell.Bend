@@ -1,0 +1,6 @@
+@TI_Net_2026_Product_Hell.Bend_HostAddress = http://localhost:5243
+
+GET {{TI_Net_2026_Product_Hell.Bend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
