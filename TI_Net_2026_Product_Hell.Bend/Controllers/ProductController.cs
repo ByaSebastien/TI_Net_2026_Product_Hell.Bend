@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using TI_Net_2026_Product_Hell.Bend.Contexts;
 using TI_Net_2026_Product_Hell.Bend.Entities;
 using TI_Net_2026_Product_Hell.Bend.Models;
 
 namespace TI_Net_2026_Product_Hell.Bend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProductController(ProductHellContext context) : ControllerBase
     {
@@ -19,10 +20,15 @@ namespace TI_Net_2026_Product_Hell.Bend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] ProductFormDto form, [FromForm] IFormFile image)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult> Post([FromForm] PostProductDto dto)
         {
-            if (image == null || image.Length == 0)
-                return null;
+            IFormFile image = dto.Image;
+
+            if (image == null || image.Length == 0 || dto.Form == null)
+                return BadRequest();
+
+            Console.WriteLine(image.ContentType);
 
             var imagesPath = Path.Combine("wwwroot", "images");
 
@@ -38,6 +44,13 @@ namespace TI_Net_2026_Product_Hell.Bend.Controllers
             {
                 await image.CopyToAsync(stream);
             }
+
+            ProductFormDto form = JsonSerializer.Deserialize<ProductFormDto>(
+                                    dto.Form,
+                                    new JsonSerializerOptions
+                                    {
+                                        PropertyNameCaseInsensitive = true
+                                    })!;
 
             Product p = new Product
             {

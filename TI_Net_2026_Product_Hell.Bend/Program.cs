@@ -10,6 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(c => c.AddDefaultPolicy(p => 
+    p.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
+));
+
 builder.Services.AddDbContext<ProductHellContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
 );
@@ -26,6 +30,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseCors();
 
 app.UseAuthorization();
 
