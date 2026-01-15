@@ -17,12 +17,12 @@ namespace TI_Net_2026_Product_Hell.Bend.Controllers
         {
             try
             {
+                List<Product> products = context.Products.ToList();
+                return Ok(products);
 
-            List<Product> products = context.Products.ToList();
-            return Ok(products);
             } catch (Exception ex)
             {
-                return BadRequest(ex);
+                return Ok(ex);
             }
         }
 

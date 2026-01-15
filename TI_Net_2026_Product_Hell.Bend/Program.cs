@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using TI_Net_2026_Product_Hell.Bend.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Activer les fichiers statiques (wwwroot par défaut)
 app.UseStaticFiles();
+
+// Servir un dossier personnalisé, par exemple "Images" à la racine du projet
+var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+if (!Directory.Exists(imagePath))
+{
+    Directory.CreateDirectory(imagePath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(imagePath),
+    RequestPath = "/images"
+});
 
 app.UseCors();
 
