@@ -15,8 +15,15 @@ namespace TI_Net_2026_Product_Hell.Bend.Controllers
         [HttpGet]
         public ActionResult<List<Product>> Index()
         {
+            try
+            {
+
             List<Product> products = context.Products.ToList();
             return Ok(products);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [HttpPost]
